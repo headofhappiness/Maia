@@ -2,19 +2,172 @@
 <html lang="sv">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>Maia – Head of Happiness AI-coach</title>
 <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
 <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
 <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 <style>
-* { box-sizing: border-box; margin: 0; padding: 0; }
-html, body, #root { height: 100%; }
-body { font-family: Georgia, serif; background: linear-gradient(135deg, #fdf6f0 0%, #f5ede3 100%); }
-@keyframes bounce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-6px)}}
-textarea::placeholder{color:#c4a88a}
-::-webkit-scrollbar{width:4px}
-::-webkit-scrollbar-thumb{background:#2a3f52;border-radius:4px}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body, #root { height: 100%; width: 100%; overflow: hidden; }
+body { font-family: Georgia, 'Times New Roman', serif; background: #fdf6f0; }
+
+@keyframes bounce { 0%,60%,100%{transform:translateY(0)} 30%{transform:translateY(-5px)} }
+@keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+@keyframes slideUp { from{transform:translateY(100%)} to{transform:translateY(0)} }
+
+textarea::placeholder { color: #c4a88a; }
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-thumb { background: #d4b89a; border-radius: 3px; }
+
+/* Mobile-first base */
+.app { display: flex; flex-direction: column; height: 100vh; height: 100dvh; background: #fdf6f0; }
+
+/* Header */
+.header { background: #1c2b3a; padding: 12px 16px; display: flex; align-items: center; gap: 10px; flex-shrink: 0; z-index: 10; }
+.header-logo { width: 36px; height: 36px; background: linear-gradient(135deg, #c9856a, #d4a070); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: bold; color: white; flex-shrink: 0; }
+.header-title { font-size: 13px; font-weight: 600; color: #f0e4d4; }
+.header-sub { font-size: 10px; color: #8fa8bc; font-style: italic; }
+.header-actions { margin-left: auto; display: flex; gap: 8px; align-items: center; }
+.header-btn { background: transparent; border: 1.5px solid #3a5068; border-radius: 16px; padding: 5px 10px; color: #d4c4b0; font-size: 11px; cursor: pointer; font-family: inherit; white-space: nowrap; }
+.online-dot { width: 7px; height: 7px; border-radius: 50%; background: #6dbb8a; box-shadow: 0 0 5px #6dbb8a; flex-shrink: 0; }
+
+/* Banner */
+.banner { background: #f5ede3; border-bottom: 1px solid #e8d5c4; padding: 7px 16px; text-align: center; font-size: 11.5px; color: #7a5c45; line-height: 1.5; flex-shrink: 0; }
+.banner a { color: #c9856a; text-decoration: none; font-weight: 600; }
+
+/* Main content */
+.main { flex: 1; overflow: hidden; display: flex; flex-direction: column; position: relative; }
+
+/* Home screen */
+.home { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+
+.home-welcome { background: white; border-radius: 16px; padding: 18px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+.home-welcome-title { font-size: 15px; font-weight: 600; color: #1c2b3a; margin-bottom: 8px; }
+.home-welcome-text { font-size: 13px; color: #5a4a3a; line-height: 1.65; }
+
+.section-card { border-radius: 14px; padding: 14px 16px; }
+.section-card.dark { background: #1c2b3a; }
+.section-card.light { background: #fdf6f0; border: 1.5px solid #e8d5c4; }
+.section-label { font-size: 11px; letter-spacing: 0.06em; margin-bottom: 10px; }
+.section-card.dark .section-label { color: #8fa8bc; }
+.section-card.light .section-label { color: #8a7060; }
+
+.chips { display: flex; flex-wrap: wrap; gap: 7px; }
+.chip { padding: 7px 13px; border-radius: 20px; font-size: 12px; cursor: pointer; font-family: inherit; transition: all 0.15s; border: 1.5px solid; background: transparent; }
+.chip.dark { border-color: #3a5068; color: #d4c4b0; }
+.chip.dark:active { background: #2a3f52; border-color: #c9856a; color: #f0e4d4; }
+.chip.light { border-color: #d4a880; color: #8a5c3a; }
+.chip.light:active { background: #f5ede3; border-color: #c9856a; }
+
+.assessment-card { background: linear-gradient(135deg, #c9856a, #d4a070); border-radius: 14px; padding: 16px; cursor: pointer; }
+.assessment-card-title { color: white; font-size: 14px; font-weight: 600; margin-bottom: 6px; }
+.assessment-card-text { color: rgba(255,255,255,0.88); font-size: 12px; line-height: 1.6; }
+
+/* Chat */
+.chat { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 14px; }
+.msg-row { display: flex; gap: 8px; align-items: flex-end; animation: fadeIn 0.25s ease; }
+.msg-row.user { flex-direction: row-reverse; }
+.msg-avatar { width: 28px; height: 28px; border-radius: 50%; background: linear-gradient(135deg, #c9856a, #d4a070); display: flex; align-items: center; justify-content: center; font-size: 12px; color: white; font-weight: bold; flex-shrink: 0; }
+.msg-bubble { max-width: 82%; padding: 11px 14px; font-size: 14px; line-height: 1.65; white-space: pre-wrap; word-break: break-word; }
+.msg-bubble.ai { background: white; border-radius: 16px 16px 16px 4px; color: #2a3040; box-shadow: 0 2px 10px rgba(0,0,0,0.07); }
+.msg-bubble.user { background: linear-gradient(135deg, #1c2b3a, #2a3f52); border-radius: 16px 16px 4px 16px; color: #f0e4d4; box-shadow: 0 2px 10px rgba(28,43,58,0.25); }
+
+.typing { display: flex; gap: 5px; align-items: center; padding: 12px 16px; background: white; border-radius: 16px 16px 16px 4px; box-shadow: 0 2px 10px rgba(0,0,0,0.07); }
+.typing-dot { width: 6px; height: 6px; border-radius: 50%; background: #c9856a; animation: bounce 1.2s ease-in-out infinite; }
+
+/* Input */
+.input-bar { padding: 10px 16px 16px; flex-shrink: 0; }
+.input-wrap { display: flex; gap: 8px; background: white; border-radius: 24px; padding: 5px 5px 5px 16px; box-shadow: 0 2px 16px rgba(0,0,0,0.09); border: 1.5px solid #e8d5c4; }
+.input-wrap textarea { flex: 1; border: none; outline: none; resize: none; font-size: 14px; font-family: inherit; color: #2a3040; background: transparent; padding: 7px 0; line-height: 1.5; max-height: 100px; overflow-y: auto; }
+.send-btn { width: 38px; height: 38px; border-radius: 50%; border: none; background: linear-gradient(135deg, #c9856a, #d4a070); cursor: pointer; display: flex; align-items: center; justify-content: center; align-self: flex-end; flex-shrink: 0; transition: opacity 0.15s; }
+.send-btn:disabled { background: #e8d5c4; cursor: default; }
+
+/* Bottom nav */
+.bottom-nav { background: #1c2b3a; border-top: 1px solid #2a3f52; display: flex; flex-shrink: 0; }
+.nav-btn { flex: 1; padding: 10px 4px 12px; display: flex; flex-direction: column; align-items: center; gap: 3px; background: transparent; border: none; cursor: pointer; font-family: inherit; color: #6a8a9a; font-size: 10px; transition: color 0.15s; }
+.nav-btn.active { color: #c9856a; }
+.nav-btn-icon { font-size: 18px; line-height: 1; }
+
+/* Exercises drawer */
+.drawer-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 40; }
+.drawer { position: fixed; bottom: 0; left: 0; right: 0; background: #1c2b3a; border-radius: 20px 20px 0 0; z-index: 50; max-height: 75vh; display: flex; flex-direction: column; animation: slideUp 0.3s ease; }
+.drawer-handle { width: 36px; height: 4px; background: #3a5068; border-radius: 2px; margin: 12px auto 0; }
+.drawer-header { padding: 12px 18px 10px; border-bottom: 1px solid #2a3f52; }
+.drawer-title { color: #f0e4d4; font-size: 14px; font-weight: 600; }
+.drawer-sub { color: #6a8a9a; font-size: 11px; margin-top: 3px; }
+.drawer-info-btn { background: transparent; border: none; color: #c9856a; font-size: 11px; cursor: pointer; font-family: inherit; text-decoration: underline; margin-top: 5px; padding: 0; }
+.drawer-info { background: #2a3f52; border-radius: 8px; padding: 10px 12px; font-size: 11px; color: #a8c0cc; line-height: 1.55; margin-top: 8px; }
+.drawer-list { flex: 1; overflow-y: auto; }
+.drawer-theme-btn { width: 100%; padding: 12px 18px; background: transparent; border: none; border-bottom: 1px solid #243344; cursor: pointer; display: flex; align-items: center; justify-content: space-between; font-family: inherit; }
+.drawer-theme-label { color: #d4c4b0; font-size: 13px; font-weight: 600; }
+.drawer-theme-arrow { color: #6a8a9a; font-size: 11px; }
+.drawer-exercises { background: #243344; }
+.exercise-link { display: block; padding: 10px 18px; text-decoration: none; border-bottom: 1px solid #1c2b3a; }
+.exercise-name { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+.exercise-name-text { color: #d4c4b0; font-size: 12px; line-height: 1.4; flex: 1; }
+.exercise-duration { color: #c9856a; font-size: 11px; flex-shrink: 0; }
+.exercise-leader { color: #6a8a9a; font-size: 10px; margin-top: 2px; }
+.exercise-note { color: #8a7060; font-size: 9px; margin-top: 1px; font-style: italic; }
+.drawer-footer { padding: 10px 18px 20px; border-top: 1px solid #2a3f52; text-align: center; color: #6a8a9a; font-size: 10px; line-height: 1.6; }
+
+/* Assessment */
+.assessment { flex: 1; overflow-y: auto; padding: 16px; }
+.assessment-card-white { background: white; border-radius: 16px; padding: 20px; box-shadow: 0 2px 12px rgba(0,0,0,0.07); }
+.a-icon { font-size: 24px; margin-bottom: 10px; }
+.a-title { font-size: 16px; font-weight: 600; color: #1c2b3a; margin-bottom: 10px; }
+.a-text { font-size: 13px; color: #4a3a2a; line-height: 1.75; margin-bottom: 18px; }
+.a-btns { display: flex; flex-direction: column; gap: 8px; }
+.a-btn-primary { padding: 12px; border-radius: 24px; border: none; background: linear-gradient(135deg, #c9856a, #d4a070); color: white; font-size: 14px; font-weight: 600; cursor: pointer; font-family: inherit; }
+.a-btn-secondary { padding: 12px; border-radius: 24px; border: 1.5px solid #d4a880; background: transparent; color: #8a5c3a; font-size: 13px; cursor: pointer; font-family: inherit; }
+.a-btn-blue { background: #8fa8bc; color: white; padding: 12px; border-radius: 24px; border: none; font-size: 14px; font-weight: 600; cursor: pointer; font-family: inherit; }
+
+/* Progress */
+.progress-bar { background: #e8d5c4; border-radius: 4px; height: 4px; margin-bottom: 18px; }
+.progress-fill { border-radius: 4px; height: 4px; transition: width 0.3s; }
+
+/* WHO5 scale */
+.scale-btns { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 12px; }
+.scale-btn { flex: 1; min-width: 44px; padding: 8px 4px; border-radius: 10px; border: 2px solid #d4c4b0; background: white; color: #5a4a3a; font-size: 11px; cursor: pointer; font-family: inherit; line-height: 1.3; text-align: center; transition: all 0.15s; white-space: pre-line; }
+.scale-btn.selected { border-color: #c9856a; background: #c9856a; color: white; }
+.scale-btn.selected-blue { border-color: #8fa8bc; background: #8fa8bc; color: white; }
+
+/* KEDS rich options */
+.keds-options { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
+.keds-option { display: flex; align-items: flex-start; gap: 10px; padding: 10px 12px; border-radius: 10px; border: 2px solid #e8d5c4; background: white; cursor: pointer; font-family: inherit; text-align: left; transition: all 0.15s; }
+.keds-option.selected { border-color: #8fa8bc; background: #edf3f7; }
+.keds-num { min-width: 26px; height: 26px; border-radius: 50%; background: #f0f4f7; color: #8a7060; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.keds-option.selected .keds-num { background: #8fa8bc; color: white; }
+.keds-text { font-size: 12.5px; color: #2a3040; line-height: 1.5; }
+.keds-hint { font-size: 10px; color: #b09880; text-align: center; margin-top: 6px; }
+
+/* Lisa scale */
+.lisa-btns { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 12px; }
+.lisa-btn { width: 44px; height: 44px; border-radius: 10px; border: 2px solid #d4c4b0; background: white; color: #5a4a3a; font-size: 14px; font-weight: 600; cursor: pointer; font-family: inherit; transition: all 0.15s; }
+.lisa-btn.selected { border-color: #c9856a; background: #c9856a; color: white; }
+
+/* Nav row */
+.nav-row { display: flex; justify-content: space-between; align-items: center; margin-top: 16px; }
+.back-btn { padding: 10px 16px; border-radius: 24px; border: 1.5px solid #d4a880; background: transparent; color: #8a5c3a; font-size: 13px; cursor: pointer; font-family: inherit; }
+.next-btn { padding: 10px 20px; border-radius: 24px; border: none; font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit; }
+.next-btn.enabled { background: linear-gradient(135deg, #c9856a, #d4a070); color: white; }
+.next-btn.enabled-blue { background: #8fa8bc; color: white; }
+.next-btn.disabled { background: #e8d5c4; color: #b09880; cursor: default; }
+.skip-btn { background: transparent; border: none; color: #b09880; font-size: 11px; cursor: pointer; font-family: inherit; text-decoration: underline; }
+
+/* Desktop enhancement */
+@media (min-width: 768px) {
+  .app { flex-direction: row; }
+  .sidebar { width: 260px; background: #1c2b3a; display: flex; flex-direction: column; overflow: hidden; border-right: 1px solid #2a3f52; order: -1; }
+  .sidebar-header { padding: 16px; border-bottom: 1px solid #2a3f52; }
+  .sidebar-list { flex: 1; overflow-y: auto; }
+  .sidebar-footer { padding: 10px 16px; border-top: 1px solid #2a3f52; text-align: center; color: #6a8a9a; font-size: 9px; line-height: 1.6; }
+  .content { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+  .drawer, .drawer-overlay, .bottom-nav { display: none !important; }
+}
+@media (max-width: 767px) {
+  .sidebar { display: none; }
+}
 </style>
 </head>
 <body>
@@ -34,6 +187,8 @@ SÄKERHETSREGLER:
 
 TON: Stress är vanligt och mänskligt. Undvik tunga uttryck som "Oj, det låter tungt". Säg hellre "Det är väldigt vanligt" eller "Många känner så". SAM-axeln = kroppens brandlarm. HPA-axeln = en arbetsmyra som jobbar i bakgrunden.
 
+UNDERVISNINGSSTIL: Använd metaforer och liknelser. Referera till vad man faktiskt känner i kroppen. Ge vardagsexempel. Förklara varför det spelar roll. Avsluta med en fråga kopplad till personens situation.
+
 LISAS BAKGRUND: Lisa fick panikattacker under sina studier. Läkarna sa "inget är fel" men hon visste att det inte stämde. När hon förstod stressfysiologin klarnade allt.
 
 LEDARE:
@@ -48,51 +203,49 @@ Daniel Ek (Tid att leva): Leg. psykolog, föreläsare i ACT.
 Chibs Okereke: Meditationsinstruktör, masterexamen i organisationspsykologi (engelska).
 Dr Diana Hill: Klinisk psykolog, specialist på ACT (engelska).
 
-NÄR DU TIPSAR OM ÖVNINGAR: Övningarna kommer från InsightTimer med deras godkännande. Utvalda för nybörjare, nästan alla 1–10 min, mestadels svenska. Ingen app behövs – klicka länken, tryck mitt på bilden, fortsätt i browsern.
+NÄR DU TIPSAR OM ÖVNINGAR: Övningarna kommer från InsightTimer med deras godkännande. Nästan alla 1–10 min, mestadels svenska. Ingen app behövs – klicka länken, tryck mitt på bilden, fortsätt i browsern.
 
-HÅLL DIG TILL PROGRAMMET: Lägg ALDRIG till egna påståenden. Gör ALDRIG jämförelser med läkemedel. Om något faller utanför: "Det här faller tyvärr utanför Head of Happiness-programmet men kontakta gärna Lisa Jonsson, lisa@headofhappiness.se"
+H�LL DIG TILL PROGRAMMET: Lägg ALDRIG till egna påståenden. Gör ALDRIG jämförelser med läkemedel. Om något faller utanför: "Det här faller tyvärr utanför Head of Happiness-programmet men kontakta gärna Lisa Jonsson, lisa@headofhappiness.se"
 
 PROGRAM – 7 VERKTYG: Stress & återhämtning, Rörelse, Sömn, Skärm & sociala medier, Mentala verktyg (medveten närvaro, distans till tankar, acceptans, tacksamhet, självmedkänsla), Relationer, Värderingar.
 
 STRESS: SAM-axeln (snabb, adrenalin, minuter) och HPA-axeln (långsam, kortisol, 60-90 min). Karaseks modell: Krav, Kontroll, Stöd. Återhämtning: byt aktivitet, natur, djupandning, sjung, musik, fokusträning.
-RÖRELSE: 150-300 min/vecka måttlig eller 75-150 min hög intensitet. Hög = löpning, snabbare cykling, aerobics, fotboll, tennis. All rörelse räknas.
+RÖRELSE: 150-300 min/vecka måttlig eller 75-150 min hög intensitet (löpning, cykling, aerobics, fotboll, tennis). All rörelse räknas. Hög intensitet = anstränger sig mer, kan bara säga några ord.
 SÖMN: 8 tips – sovtider, dagsljus, rörelse, socialt, sovrum, ingen teknik, koffein från lunch, hantera tankar.
 SKÄRM: 30 min/dag i 3 veckor ger minskad stress. Dopaminrushar avtrupperar receptorer.
 MENTALA VERKTYG: Medveten närvaro (andetaget). Distans till tankar (jag har en tanke om / jag kan ha fel / är den hjälpsam?). Acceptans (sluta kriga mot det som redan är). Tacksamhet (3 saker per dag). Självmedkänsla – Neff (medvetenhet / normalisering / vänlighet mot sig själv).
 RELATIONER: EASE – Extend, Action plan, Selection, Expect the best.
 VÄRDERINGAR: Livserfarenheter, vad ger glädje, vad upprör dig, visualisera ideala livet.
 
-NÄR DU FÅR KARTLÄGGNINGSRESULTAT: Ge en varm, personlig återkoppling. Lyft fram de 2-3 lägst skattade områdena och föreslå var man kan börja. Vid låg WHO-5 (under 13p) eller hög KEDS (19+): uppmana varsamt att kontakta vårdcentral. Avsluta alltid med en öppen fråga: "Var vill du börja?"`;
+NÄR DU FÅR KARTLÄGGNINGSRESULTAT: Ge en varm, personlig återkoppling. Lyft fram de 2-3 lägst skattade områdena och föreslå var man kan börja. Vid låg WHO-5 (under 13p) eller hög KEDS (19+): uppmana varsamt att kontakta vårdcentral. Avsluta alltid med en öppen fråga.
 
-const WHO5 = [
-  "...har jag känt mig glad och på gott humör",
-  "...har jag känt mig lugn och avslappnad",
-  "...har jag känt mig aktiv och pigg",
-  "...har jag vaknat och känt mig utvilad och frisk",
-  "...har min vardag varit fylld av saker som intresserar mig",
+COACHING: Lyssna först. EN fråga i taget. Bekräfta och normalisera – stress är vanligt och mänskligt. Hänvisa till professionell hjälp vid allvarliga symtom.`;
+
+const WHO5_Q = [
+  "Jag har känt mig glad och på gott humör",
+  "Jag har känt mig lugn och avslappnad",
+  "Jag har känt mig aktiv och kraftfull",
+  "Jag har känt mig pigg och utvilad när jag vaknat",
+  "Mitt vardagsliv har varit fyllt av sådant som intresserar mig",
+];
+const WHO5_L = ["0\nAldrig","1\nIbland","2\nMindre än\nhälften","3\nMer än\nhälften","4\nFör det\nmesta","5\nHela\ntiden"];
+
+const KEDS_Q = [
+  { title: "Koncentrationsförmåga", desc: "Hur fungerar du vid sysslor som kräver koncentration, t.ex. läsning eller samtal?", opts: { 0:"Jag har inte svårt att koncentrera mig utan läser och för samtal som vanligt.", 2:"Jag har ibland svårt att hålla tankarna samlade på sådant som normalt fångar min uppmärksamhet.", 4:"Jag har ofta svårt att koncentrera mig.", 6:"Jag kan överhuvudtaget inte koncentrera mig på någonting." }},
+  { title: "Minne", desc: "Hur är din förmåga att komma ihåg saker – namn, datum eller vardagliga ärenden?", opts: { 0:"Jag kommer ihåg namn, datum och ärenden jag ska göra.", 2:"Det händer att jag glömmer bort sådant som inte är så viktigt men om jag skärper mig minns jag det.", 4:"Jag glömmer ofta bort möten eller namn på personer jag känner.", 6:"Jag glömmer dagligen bort betydelsefulla saker." }},
+  { title: "Kroppslig uttröttbarhet", desc: "Känner du dig mer fysiskt trött än vanligt?", opts: { 0:"Jag känner mig som vanligt och utför fysiska aktiviteter som vanligt.", 2:"Jag känner att fysiska ansträngningar är mer tröttande än normalt men rör mig ändå som vanligt.", 4:"Jag har svårt att orka med kroppsansträngning.", 6:"Jag känner mig mycket svag och orkar inte ens röra mig kortare sträckor." }},
+  { title: "Uthållighet", desc: "Blir du lättare psykiskt trött än vanligt i vardagen?", opts: { 0:"Jag har lika mycket energi som vanligt.", 2:"Jag klarar vardagliga sysslor men det går åt mer energi och jag behöver ta pauser oftare.", 4:"Jag blir onormalt trött av vardagssysslor.", 6:"Jag orkar inte göra någonting." }},
+  { title: "Återhämtning", desc: "Hur väl återhämtar du dig när du blivit uttröttad?", opts: { 0:"Jag behöver inte vila under dagen.", 2:"Jag blir trött under dagen men det räcker med en liten paus.", 4:"Jag blir trött under dagen och behöver långa pauser.", 6:"Det spelar ingen roll hur mycket jag vilar – det är som om jag inte kan ladda om batterierna." }},
+  { title: "Sömn", desc: "Hur god har sömnen varit de senaste två veckorna?", opts: { 0:"Jag sover gott och känner mig utvilad när jag vaknar.", 2:"Ibland sover jag oroligare eller vaknar under natten.", 4:"Jag sover ofta oroligt och det händer att jag inte känner mig utsövd.", 6:"Jag sover oroligt varje natt och känner mig aldrig utvilad." }},
+  { title: "Överkänslighet för sinnesintryck", desc: "Har något av dina sinnen blivit mer känsliga för t.ex. ljud, ljus eller dofter?", opts: { 0:"Jag tycker inte att mina sinnen är känsligare än vanligt.", 2:"Det händer att ljud, ljus eller andra sinnesintryck känns obehagliga.", 4:"Jag upplever ofta sinnesintryck som störande eller obehagliga.", 6:"Sinnesintryck stör mig så mycket att jag drar mig undan för att vila." }},
+  { title: "Upplevelsen av krav", desc: "Hur reagerar du på krav från omgivningen eller dig själv?", opts: { 0:"Jag gör det jag ska utan att uppleva det som särskilt krävande.", 2:"Vardagliga situationer kan ibland kännas krävande och orsaka obehag.", 4:"Situationer jag tidigare hanterat lätt känns nu ofta krävande och orsakar starkt obehag.", 6:"Det mesta känns krävande och jag klarar inte av att hantera det." }},
+  { title: "Irritation och ilska", desc: "Hur lättirriterad eller arg har du känt dig?", opts: { 0:"Jag känner mig inte särskilt lättirriterad.", 2:"Vardagliga situationer kan ibland få mig att bli lättare irriterad än vanligt.", 4:"Jag blir lättare arg eller provocerad än vanligt.", 6:"Jag känner mig ofta rasande invärtes och måste anstränga mig för att behärska mig." }},
 ];
 
-const WHO5_LABELS = ["0\nAldrig", "1\nIbland", "2\nMindre än\nhälften", "3\nMer än\nhälften", "4\nFör det\nmesta", "5\nHela\ntiden"];
-
-const KEDS = [
-  "Koncentrationssvårigheter – hur svårt har det varit att koncentrera sig?",
-  "Minnesproblem – hur ofta har du haft svårt att komma ihåg saker?",
-  "Trötthet – hur trött har du känt dig generellt?",
-  "Behov av återhämtning – hur stort behov av vila har du haft?",
-  "Förmåga att hantera krav – hur svårt har det varit att hantera krav?",
-  "Känslosamhet – hur lätt har du blivit ledsen, irriterad eller känslosam?",
-  "Orkeslöshet – hur ofta har du känt att du saknar ork och energi?",
-  "Ångest – hur mycket ångest eller oro har du upplevt?",
-  "Sömnsvårigheter – hur ofta har du haft svårt att sova trots att du är trött?",
-];
-
-const KEDS_LABELS = ["0\nInte alls", "1", "2", "3", "4", "5", "6\nHela\ntiden"];
-
-const LISA_AREAS = [
+const LISA_A = [
   "Kunskap om stress och återhämtning",
   "Återhämtning under dagen",
-  "Sömn",
-  "Rörelse",
+  "Sömn","Rörelse",
   "Skärm och sociala medier",
   "Mentala verktyg för att hantera tankar och känslor",
   "Socialt umgänge och relationer",
@@ -100,204 +253,156 @@ const LISA_AREAS = [
 ];
 
 const EXERCISES = {
-  "Stress & återhämtning": [
-    { name: "Kort Andrum", duration: "3:26", url: "https://insighttimer.com/olaschenstrom/guided-meditations/kort-andrum", leader: "Ola Schenström", lang: "🇸🇪" },
-    { name: "Meditation när du behöver men inte hinner", duration: "2:21", url: "https://insighttimer.com/reboundmeditation/guided-meditations/meditation-for-stunder-nar-du-behover-men-inte-hinner-dot-dot-dot", leader: "", lang: "🇸🇪" },
-    { name: "Intro till andningsövningar", duration: "3:12", url: "https://insighttimer.com/reboundmeditation/guided-meditations/en-introduktion-till-andningsovningar-for-nyborjare", leader: "", lang: "🇸🇪" },
-    { name: "Paus", duration: "4:49", url: "https://insighttimer.com/sofiej/guided-meditations/paus-2", leader: "Sofie J", lang: "🇸🇪" },
-    { name: "Kort kroppsscanning", duration: "6:10", url: "https://insighttimer.com/olaschenstrom/guided-meditations/kort-kroppskanning", leader: "Ola Schenström", lang: "🇸🇪" },
-    { name: "Sakta ner", duration: "10:33", url: "https://insighttimer.com/ottilia.bergstrom/guided-meditations/sakta-ner", leader: "Ottilia Bergström", lang: "🇸🇪" },
-    { name: "Avslappnande andningsövning", duration: "3:12", url: "https://insighttimer.com/reboundmeditation/guided-meditations/avslappnande-andningsovning-med-musik", leader: "", lang: "🇸🇪" },
-    { name: "SOS panikattack", duration: "7:13", url: "https://insighttimer.com/sofiej/guided-meditations/sos-panikattack", leader: "Sofie J", lang: "🇸🇪", note: "Vid akut ångest" },
-    { name: "Morgonmeditation – grundad energi", duration: "8:23", url: "https://insighttimer.com/sofiej/guided-meditations/morgonmeditation-grundad-energi", leader: "Sofie J", lang: "🇸🇪" },
-    { name: "Kroppsscanning", duration: "10:32", url: "https://insighttimer.com/karin.malmstrom/guided-meditations/kroppsscanning-1", leader: "Karin Malmström", lang: "🇸🇪" },
+  "🌿 Stress & återhämtning": [
+    { name:"Kort Andrum", dur:"3:26", url:"https://insighttimer.com/olaschenstrom/guided-meditations/kort-andrum", leader:"Ola Schenström", lang:"🇸🇪" },
+    { name:"Meditation när du behöver men inte hinner", dur:"2:21", url:"https://insighttimer.com/reboundmeditation/guided-meditations/meditation-for-stunder-nar-du-behover-men-inte-hinner-dot-dot-dot", leader:"", lang:"🇸🇪" },
+    { name:"Intro till andningsövningar", dur:"3:12", url:"https://insighttimer.com/reboundmeditation/guided-meditations/en-introduktion-till-andningsovningar-for-nyborjare", leader:"", lang:"🇸🇪" },
+    { name:"Paus", dur:"4:49", url:"https://insighttimer.com/sofiej/guided-meditations/paus-2", leader:"Sofie J", lang:"🇸🇪" },
+    { name:"Kort kroppsscanning", dur:"6:10", url:"https://insighttimer.com/olaschenstrom/guided-meditations/kort-kroppskanning", leader:"Ola Schenström", lang:"🇸🇪" },
+    { name:"Sakta ner", dur:"10:33", url:"https://insighttimer.com/ottilia.bergstrom/guided-meditations/sakta-ner", leader:"Ottilia Bergström", lang:"🇸🇪" },
+    { name:"Avslappnande andningsövning", dur:"3:12", url:"https://insighttimer.com/reboundmeditation/guided-meditations/avslappnande-andningsovning-med-musik", leader:"", lang:"🇸🇪" },
+    { name:"SOS panikattack", dur:"7:13", url:"https://insighttimer.com/sofiej/guided-meditations/sos-panikattack", leader:"Sofie J", lang:"🇸🇪", note:"Vid akut ångest" },
+    { name:"Morgonmeditation – grundad energi", dur:"8:23", url:"https://insighttimer.com/sofiej/guided-meditations/morgonmeditation-grundad-energi", leader:"Sofie J", lang:"🇸🇪" },
+    { name:"Kroppsscanning", dur:"10:32", url:"https://insighttimer.com/karin.malmstrom/guided-meditations/kroppsscanning-1", leader:"Karin Malmström", lang:"🇸🇪" },
   ],
-  "Medveten närvaro": [
-    { name: "Stanna upp", duration: "1:43", url: "https://insighttimer.com/olaschenstrom/guided-meditations/stanna-upp", leader: "Ola Schenström", lang: "🇸🇪", note: "Snabbast möjliga" },
-    { name: "A mindful meeting starter", duration: "3:27", url: "https://insighttimer.com/tesscollard/guided-meditations/a-mindful-meeting-starter", leader: "Tess Collard", lang: "🇬🇧", note: "Bra inför möten" },
-    { name: "Hantera stress", duration: "5:08", url: "https://insighttimer.com/karin.malmstrom/guided-meditations/hantera-stress", leader: "Karin Malmström", lang: "🇸🇪" },
-    { name: "Morgonmeditation – grundad energi", duration: "8:23", url: "https://insighttimer.com/sofiej/guided-meditations/morgonmeditation-grundad-energi", leader: "Sofie J", lang: "🇸🇪" },
-    { name: "Följ ditt andetag med musik", duration: "10:29", url: "https://insighttimer.com/mariaestlingvannestal/guided-meditations/folj-ditt-andetag-med-musik", leader: "Maria Estling Vannestål", lang: "🇸🇪" },
+  "🎯 Medveten närvaro": [
+    { name:"Stanna upp", dur:"1:43", url:"https://insighttimer.com/olaschenstrom/guided-meditations/stanna-upp", leader:"Ola Schenström", lang:"🇸🇪", note:"Snabbast möjliga" },
+    { name:"A mindful meeting starter", dur:"3:27", url:"https://insighttimer.com/tesscollard/guided-meditations/a-mindful-meeting-starter", leader:"Tess Collard", lang:"🇬🇧", note:"Bra inför möten" },
+    { name:"Hantera stress", dur:"5:08", url:"https://insighttimer.com/karin.malmstrom/guided-meditations/hantera-stress", leader:"Karin Malmström", lang:"🇸🇪" },
+    { name:"Morgonmeditation – grundad energi", dur:"8:23", url:"https://insighttimer.com/sofiej/guided-meditations/morgonmeditation-grundad-energi", leader:"Sofie J", lang:"🇸🇪" },
+    { name:"Följ ditt andetag med musik", dur:"10:29", url:"https://insighttimer.com/mariaestlingvannestal/guided-meditations/folj-ditt-andetag-med-musik", leader:"Maria Estling Vannestål", lang:"🇸🇪" },
   ],
-  "Distans till tankar": [
-    { name: "En paus för dina tankar", duration: "6:39", url: "https://insighttimer.com/ottilia.bergstrom/guided-meditations/en-paus-for-dina-tankar", leader: "Ottilia Bergström", lang: "🇸🇪" },
-    { name: "Tankar", duration: "9:45", url: "https://insighttimer.com/sofiej/guided-meditations/tankar", leader: "Sofie J", lang: "🇸🇪" },
-    { name: "ACT Cognitive Defusion", duration: "5:22", url: "https://insighttimer.com/drdianahill/guided-meditations/act-cognitive-defusion-for-overwhelming-thoughts", leader: "Dr Diana Hill", lang: "🇬🇧" },
-    { name: "Awareness Of Thoughts", duration: "9:59", url: "https://insighttimer.com/chibsokereke/guided-meditations/awareness-of-thoughts-meditation", leader: "Chibs Okereke", lang: "🇬🇧" },
-    { name: "Stepping Back From Unhelpful Thinking", duration: "2:55", url: "https://insighttimer.com/reubenlowe/guided-meditations/stepping-back-from-unhelpful-thinking-mindful-creation-micro-talk", leader: "", lang: "🇬🇧" },
+  "💭 Distans till tankar": [
+    { name:"En paus för dina tankar", dur:"6:39", url:"https://insighttimer.com/ottilia.bergstrom/guided-meditations/en-paus-for-dina-tankar", leader:"Ottilia Bergström", lang:"🇸🇪" },
+    { name:"Tankar", dur:"9:45", url:"https://insighttimer.com/sofiej/guided-meditations/tankar", leader:"Sofie J", lang:"🇸🇪" },
+    { name:"ACT Cognitive Defusion", dur:"5:22", url:"https://insighttimer.com/drdianahill/guided-meditations/act-cognitive-defusion-for-overwhelming-thoughts", leader:"Dr Diana Hill", lang:"🇬🇧" },
+    { name:"Awareness Of Thoughts", dur:"9:59", url:"https://insighttimer.com/chibsokereke/guided-meditations/awareness-of-thoughts-meditation", leader:"Chibs Okereke", lang:"🇬🇧" },
   ],
-  "Acceptans": [
-    { name: "1-minutsövning", duration: "1:35", url: "https://insighttimer.com/olaschenstrom/guided-meditations/1-minut-meditation", leader: "Ola Schenström", lang: "🇸🇪", note: "Snabbast möjliga" },
-    { name: "Den vänliga handen", duration: "3:19", url: "https://insighttimer.com/tidattleva/guided-meditations/den-vanliga-handen", leader: "Daniel Ek", lang: "🇸🇪" },
-    { name: "Acceptans", duration: "6:58", url: "https://insighttimer.com/tidattleva/guided-meditations/acceptans", leader: "Daniel Ek", lang: "🇸🇪" },
-    { name: "Acceptans av jobbiga känslor", duration: "9:01", url: "https://insighttimer.com/sofiej/guided-meditations/acceptans-av-jobbiga-kanslor", leader: "Sofie J", lang: "🇸🇪" },
-    { name: "Letting Go Of What You Can't Change", duration: "9:34", url: "https://insighttimer.com/chibsokereke/guided-meditations/letting-go-of-what-you-can-t-change", leader: "Chibs Okereke", lang: "🇬🇧" },
+  "☮️ Acceptans": [
+    { name:"1-minutsövning", dur:"1:35", url:"https://insighttimer.com/olaschenstrom/guided-meditations/1-minut-meditation", leader:"Ola Schenström", lang:"🇸🇪", note:"Snabbast möjliga" },
+    { name:"Den vänliga handen", dur:"3:19", url:"https://insighttimer.com/tidattleva/guided-meditations/den-vanliga-handen", leader:"Daniel Ek", lang:"🇸🇪" },
+    { name:"Acceptans", dur:"6:58", url:"https://insighttimer.com/tidattleva/guided-meditations/acceptans", leader:"Daniel Ek", lang:"🇸🇪" },
+    { name:"Acceptans av jobbiga känslor", dur:"9:01", url:"https://insighttimer.com/sofiej/guided-meditations/acceptans-av-jobbiga-kanslor", leader:"Sofie J", lang:"🇸🇪" },
   ],
-  "Tacksamhet": [
-    { name: "Morgonmeditation tacksamhet", duration: "6:03", url: "https://insighttimer.com/sofiej/guided-meditations/morgonmeditation-tacksamhet", leader: "Sofie J", lang: "🇸🇪" },
-    { name: "Tacksamhetsmeditation med musik", duration: "9:09", url: "https://insighttimer.com/mariaestlingvannestal/guided-meditations/tacksamhetsmeditation-med-musik", leader: "Maria Estling Vannestål", lang: "🇸🇪" },
-    { name: "En god morgon", duration: "8:37", url: "https://insighttimer.com/mariaestlingvannestal/guided-meditations/en-god-morgon-med-musik", leader: "Maria Estling Vannestål", lang: "🇸🇪" },
-    { name: "Five-minute morning on gratitude", duration: "5:24", url: "https://insighttimer.com/julieelagrace/guided-meditations/five-minute-morning-meditation-on-gratitude", leader: "", lang: "🇬🇧" },
+  "🙏 Tacksamhet": [
+    { name:"Morgonmeditation tacksamhet", dur:"6:03", url:"https://insighttimer.com/sofiej/guided-meditations/morgonmeditation-tacksamhet", leader:"Sofie J", lang:"🇸🇪" },
+    { name:"Tacksamhetsmeditation med musik", dur:"9:09", url:"https://insighttimer.com/mariaestlingvannestal/guided-meditations/tacksamhetsmeditation-med-musik", leader:"Maria Estling Vannestål", lang:"🇸🇪" },
+    { name:"En god morgon", dur:"8:37", url:"https://insighttimer.com/mariaestlingvannestal/guided-meditations/en-god-morgon-med-musik", leader:"Maria Estling Vannestål", lang:"🇸🇪" },
+    { name:"Five-minute morning on gratitude", dur:"5:24", url:"https://insighttimer.com/julieelagrace/guided-meditations/five-minute-morning-meditation-on-gratitude", leader:"", lang:"🇬🇧" },
   ],
-  "Självmedkänsla": [
-    { name: "Meditation för självkärlek", duration: "6:32", url: "https://insighttimer.com/jakobahl/guided-meditations/meditation-for-sjalvkarlek", leader: "Jakob Ahl", lang: "🇸🇪" },
-    { name: "Ditt medkännande själv", duration: "13:38", url: "https://insighttimer.com/psykolog_sofiaviotti/guided-meditations/ditt-medkannande-sjalv", leader: "Psykolog Sofia Viotti", lang: "🇸🇪" },
-    { name: "Meditation för självmedkänsla", duration: "14:39", url: "https://insighttimer.com/mariaestlingvannestal/guided-meditations/meditation-for-sjalvmedkansla-med-musik", leader: "Maria Estling Vannestål", lang: "🇸🇪" },
-    { name: "Rensa ut och släpp taget", duration: "10:09", url: "https://insighttimer.com/mariaestlingvannestal/guided-meditations/rensa-ut-och-slapp-taget", leader: "Maria Estling Vannestål", lang: "🇸🇪" },
-    { name: "3-Step Self-Compassion Practice", duration: "9:32", url: "https://insighttimer.com/chibsokereke/guided-meditations/3-step-self-compassion-practice", leader: "Chibs Okereke", lang: "🇬🇧" },
+  "🤍 Självmedkänsla": [
+    { name:"Meditation för självkärlek", dur:"6:32", url:"https://insighttimer.com/jakobahl/guided-meditations/meditation-for-sjalvkarlek", leader:"Jakob Ahl", lang:"🇸🇪" },
+    { name:"Ditt medkännande själv", dur:"13:38", url:"https://insighttimer.com/psykolog_sofiaviotti/guided-meditations/ditt-medkannande-sjalv", leader:"Psykolog Sofia Viotti", lang:"🇸🇪" },
+    { name:"Meditation för självmedkänsla", dur:"14:39", url:"https://insighttimer.com/mariaestlingvannestal/guided-meditations/meditation-for-sjalvmedkansla-med-musik", leader:"Maria Estling Vannestål", lang:"🇸🇪" },
+    { name:"3-Step Self-Compassion", dur:"9:32", url:"https://insighttimer.com/chibsokereke/guided-meditations/3-step-self-compassion-practice", leader:"Chibs Okereke", lang:"🇬🇧" },
   ],
-  "Värderingar": [
-    { name: "Den inre kompassen", duration: "8:27", url: "https://insighttimer.com/mariaestlingvannestal/guided-meditations/den-inre-kompassen-kort-version-med-musik", leader: "Maria Estling Vannestål", lang: "🇸🇪" },
-    { name: "En resa till din framtid", duration: "11:59", url: "https://insighttimer.com/mariaestlingvannestal/guided-meditations/en-resa-till-din-framtid-med-musik", leader: "Maria Estling Vannestål", lang: "🇸🇪" },
-    { name: "Letting Go Of People Pleasing", duration: "11:31", url: "https://insighttimer.com/chibsokereke/guided-meditations/letting-go-of-people-pleasing_1", leader: "Chibs Okereke", lang: "🇬🇧" },
-    { name: "Carrying Perfection Kindly", duration: "4:15", url: "https://insighttimer.com/wellnessproject/guided-meditations/carrying-perfection-kindly", leader: "", lang: "🇬🇧" },
+  "🧭 Värderingar": [
+    { name:"Den inre kompassen", dur:"8:27", url:"https://insighttimer.com/mariaestlingvannestal/guided-meditations/den-inre-kompassen-kort-version-med-musik", leader:"Maria Estling Vannestål", lang:"🇸🇪" },
+    { name:"En resa till din framtid", dur:"11:59", url:"https://insighttimer.com/mariaestlingvannestal/guided-meditations/en-resa-till-din-framtid-med-musik", leader:"Maria Estling Vannestål", lang:"🇸🇪" },
+    { name:"Letting Go Of People Pleasing", dur:"11:31", url:"https://insighttimer.com/chibsokereke/guided-meditations/letting-go-of-people-pleasing_1", leader:"Chibs Okereke", lang:"🇬🇧" },
   ],
-  "Sömn": [
-    { name: "Avslappnande andningsövning", duration: "3:12", url: "https://insighttimer.com/reboundmeditation/guided-meditations/avslappnande-andningsovning-med-musik", leader: "", lang: "🇸🇪" },
-    { name: "Sakta ner", duration: "10:33", url: "https://insighttimer.com/ottilia.bergstrom/guided-meditations/sakta-ner", leader: "Ottilia Bergström", lang: "🇸🇪", note: "Bra inför sänggåendet" },
-    { name: "Kroppsscanning", duration: "10:32", url: "https://insighttimer.com/karin.malmstrom/guided-meditations/kroppsscanning-1", leader: "Karin Malmström", lang: "🇸🇪" },
+  "😴 Sömn": [
+    { name:"Avslappnande andningsövning", dur:"3:12", url:"https://insighttimer.com/reboundmeditation/guided-meditations/avslappnande-andningsovning-med-musik", leader:"", lang:"🇸🇪" },
+    { name:"Sakta ner", dur:"10:33", url:"https://insighttimer.com/ottilia.bergstrom/guided-meditations/sakta-ner", leader:"Ottilia Bergström", lang:"🇸🇪", note:"Bra inför sänggåendet" },
+    { name:"Kroppsscanning", dur:"10:32", url:"https://insighttimer.com/karin.malmstrom/guided-meditations/kroppsscanning-1", leader:"Karin Malmström", lang:"🇸🇪" },
   ],
 };
 
-const THEME_EMOJIS = {
-  "Stress & återhämtning": "🌿", "Medveten närvaro": "🎯", "Distans till tankar": "💭",
-  "Acceptans": "☮️", "Tacksamhet": "🙏", "Självmedkänsla": "🤍", "Värderingar": "🧭", "Sömn": "😴",
-};
+function buildSummary(who5, keds, lisa) {
+  const w5 = Object.values(who5).reduce((a,b)=>a+b,0);
+  const ks = Object.values(keds).reduce((a,b)=>a+b,0);
+  const wl = ["Aldrig","Ibland","Lite mindre än hälften","Lite mer än hälften","För det mesta","Hela tiden"];
+  let t = "Här är resultaten från min kartläggning:\n\n";
+  if (Object.keys(who5).length > 0) {
+    t += `WHO-5 (välmående): ${w5} av 25 poäng\n`;
+    WHO5_Q.forEach((q,i)=>{ if(who5[i]!==undefined) t+=`  ${q}: ${who5[i]} (${wl[who5[i]]})\n`; });
+    t += "\n";
+  }
+  if (Object.keys(keds).length > 0) {
+    t += `KEDS (utmattningsrisk): ${ks} av 54 poäng\n`;
+    KEDS_Q.forEach((q,i)=>{ if(keds[i]!==undefined) t+=`  ${q.title}: ${keds[i]}/6\n`; });
+    t += "\n";
+  }
+  if (Object.keys(lisa).length > 0) {
+    t += "Självskattning (1–10):\n";
+    LISA_A.forEach((a,i)=>{ if(lisa[i]!==undefined) t+=`  ${a}: ${lisa[i]}/10\n`; });
+  }
+  t += "\nKan du ge mig en personlig återkoppling och hjälpa mig se var jag kan börja?";
+  return t;
+}
 
-// ─── Assessment Component ───
+// ─── Assessment ───
 function Assessment({ onComplete, onSkip }) {
-  const [phase, setPhase] = useState("gdpr"); // gdpr | intro | who5 | keds_intro | keds | lisa | done
-  const [who5Answers, setWho5Answers] = useState({});
-  const [kedsAnswers, setKedsAnswers] = useState({});
-  const [lisaAnswers, setLisaAnswers] = useState({});
-  const [currentQ, setCurrentQ] = useState(0);
+  const [phase, setPhase] = useState("gdpr");
+  const [who5, setWho5] = useState({});
+  const [keds, setKeds] = useState({});
+  const [lisa, setLisa] = useState({});
+  const [q, setQ] = useState(0);
 
-  const NAV = "#1c2b3a";
-  const TERRA = "#c9856a";
-  const LIGHT = "#fdf6f0";
-
-  function ScaleButtons({ labels, selected, onSelect, color = TERRA }) {
-    return (
-      <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginTop: 12 }}>
-        {labels.map((label, i) => (
-          <button key={i} onClick={() => onSelect(i)}
-            style={{ padding: "8px 10px", borderRadius: 10, border: `2px solid ${selected === i ? color : "#d4c4b0"}`, background: selected === i ? color : "white", color: selected === i ? "white" : "#5a4a3a", fontSize: 11, cursor: "pointer", fontFamily: "inherit", lineHeight: 1.3, textAlign: "center", minWidth: 48, whiteSpace: "pre-line", transition: "all 0.15s" }}>
-            {label}
-          </button>
-        ))}
-      </div>
-    );
-  }
-
-  function LisaButtons({ selected, onSelect }) {
-    return (
-      <div style={{ display: "flex", gap: 5, flexWrap: "wrap", marginTop: 12 }}>
-        {[1,2,3,4,5,6,7,8,9,10].map(i => (
-          <button key={i} onClick={() => onSelect(i)}
-            style={{ width: 42, height: 42, borderRadius: 10, border: `2px solid ${selected === i ? TERRA : "#d4c4b0"}`, background: selected === i ? TERRA : "white", color: selected === i ? "white" : "#5a4a3a", fontSize: 13, fontWeight: 600, cursor: "pointer", fontFamily: "inherit", transition: "all 0.15s" }}>
-            {i}
-          </button>
-        ))}
-      </div>
-    );
-  }
-
-  function ProgressBar({ current, total, color = TERRA }) {
-    return (
-      <div style={{ background: "#e8d5c4", borderRadius: 4, height: 4, marginBottom: 20 }}>
-        <div style={{ background: color, borderRadius: 4, height: 4, width: `${(current / total) * 100}%`, transition: "width 0.3s" }} />
-      </div>
-    );
-  }
-
-  function nextQ(answers, setAnswers, questions, nextPhase, key) {
-    if (answers[currentQ] === undefined) return;
-    const updated = { ...answers, [currentQ]: answers[currentQ] };
-    setAnswers(updated);
-    if (currentQ < questions.length - 1) {
-      setCurrentQ(currentQ + 1);
-    } else {
-      setCurrentQ(0);
-      setPhase(nextPhase);
-    }
-  }
+  const ProgressBar = ({ cur, tot, color="#c9856a" }) => (
+    <div className="progress-bar">
+      <div className="progress-fill" style={{ width:`${(cur/tot)*100}%`, background:color }} />
+    </div>
+  );
 
   if (phase === "gdpr") return (
-    <div style={{ padding: "24px 20px", maxWidth: 600, margin: "0 auto" }}>
-      <div style={{ background: "white", borderRadius: 18, padding: "24px", boxShadow: "0 2px 16px rgba(0,0,0,0.08)" }}>
-        <div style={{ fontSize: 22, marginBottom: 8 }}>🔒</div>
-        <div style={{ fontSize: 16, fontWeight: 600, color: NAV, marginBottom: 12 }}>Innan vi börjar – en kort notering om integritet</div>
-        <div style={{ fontSize: 13.5, color: "#4a3a2a", lineHeight: 1.75, marginBottom: 20 }}>
-          Dina svar i kartläggningen används enbart för att Maia ska kunna ge dig en mer personlig återkoppling i denna session.
-          <br /><br />
-          <span style={{ fontWeight: 600 }}>Vad som lagras:</span> Dina svar sparas inte på någon server och delas inte med någon. Konversationen lever bara i din webbläsare under denna session.
-          <br /><br />
-          <span style={{ fontWeight: 600 }}>Dina rättigheter:</span> Du kan avbryta när som helst och hoppa över vilken fråga du vill. Du behöver inte fylla i ditt namn eller någon personuppgift.
-          <br /><br />
-          <span style={{ fontWeight: 600 }}>Frågor?</span> Kontakta Lisa på <a href="mailto:lisa@headofhappiness.se" style={{ color: "#c9856a" }}>lisa@headofhappiness.se</a>
+    <div className="assessment">
+      <div className="assessment-card-white">
+        <div className="a-icon">🔒</div>
+        <div className="a-title">Innan vi börjar – om integritet</div>
+        <div className="a-text">
+          Dina svar i kartläggningen används enbart för att Maia ska ge dig en mer personlig återkoppling i denna session.<br/><br/>
+          <strong>Vad som lagras:</strong> Dina svar sparas inte på någon server och delas inte med någon. Konversationen lever bara i din webbläsare under denna session.<br/><br/>
+          <strong>Dina rättigheter:</strong> Du kan avbryta när som helst. Du behöver inte fylla i ditt namn eller någon personuppgift.<br/><br/>
+          Läs mer i vår <a href="https://www.headofhappiness.se/integritetspolicy" target="_blank" style={{color:"#c9856a"}}>integritetspolicy</a>.
         </div>
-        <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-          <button onClick={() => setPhase("intro")}
-            style={{ padding: "10px 22px", borderRadius: 24, border: "none", background: `linear-gradient(135deg, ${TERRA}, #d4a070)`, color: "white", fontSize: 14, fontWeight: 600, cursor: "pointer", fontFamily: "inherit" }}>
-            Jag förstår – fortsätt
-          </button>
-          <button onClick={onSkip}
-            style={{ padding: "10px 18px", borderRadius: 24, border: "1.5px solid #d4a880", background: "transparent", color: "#8a5c3a", fontSize: 13, cursor: "pointer", fontFamily: "inherit" }}>
-            Hoppa över, chatta direkt
-          </button>
+        <div className="a-btns">
+          <button className="a-btn-primary" onClick={()=>setPhase("intro")}>Jag förstår – fortsätt</button>
+          <button className="a-btn-secondary" onClick={onSkip}>Hoppa över, chatta direkt</button>
         </div>
       </div>
     </div>
   );
 
   if (phase === "intro") return (
-    <div style={{ padding: "24px 20px", maxWidth: 600, margin: "0 auto" }}>
-      <div style={{ background: "white", borderRadius: 18, padding: "24px", boxShadow: "0 2px 16px rgba(0,0,0,0.08)" }}>
-        <div style={{ fontSize: 22, marginBottom: 8 }}>📋</div>
-        <div style={{ fontSize: 16, fontWeight: 600, color: NAV, marginBottom: 12 }}>Kartläggning – lär Maia känna dig</div>
-        <div style={{ fontSize: 13.5, color: "#4a3a2a", lineHeight: 1.7, marginBottom: 20 }}>
-          Kartläggningen innehåller tre delar och tar ca 5–10 minuter. Den hjälper Maia att anpassa vad ni pratar om efter hur du mår just nu. Du kan hoppa över vilken del som helst.
-          <br /><br />
-          <span style={{ fontWeight: 600 }}>Del 1 – WHO-5</span> – 5 frågor om ditt välmående, framtaget av Världshälsoorganisationen.<br />
-          <span style={{ fontWeight: 600 }}>Del 2 – KEDS</span> – 9 frågor om utmattningssymtom, framtaget av Karolinska Institutet.<br />
-          <span style={{ fontWeight: 600 }}>Del 3 – Självskattning</span> – Lisas egna frågor om programmets olika områden.
+    <div className="assessment">
+      <div className="assessment-card-white">
+        <div className="a-icon">📋</div>
+        <div className="a-title">Kartläggning – lär Maia känna dig</div>
+        <div className="a-text">
+          Kartläggningen tar ca 5–10 minuter och hjälper Maia att anpassa sig efter hur du mår just nu. Du kan hoppa över vilken del som helst.<br/><br/>
+          <strong>Del 1 – WHO-5:</strong> 5 frågor om ditt välmående, framtaget av Världshälsoorganisationen.<br/>
+          <strong>Del 2 – KEDS:</strong> 9 frågor om utmattningssymtom, framtaget av Karolinska Institutet.<br/>
+          <strong>Del 3 – Självskattning:</strong> Frågor om programmets olika områden.
         </div>
-        <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-          <button onClick={() => setPhase("who5")}
-            style={{ padding: "10px 22px", borderRadius: 24, border: "none", background: `linear-gradient(135deg, ${TERRA}, #d4a070)`, color: "white", fontSize: 14, fontWeight: 600, cursor: "pointer", fontFamily: "inherit" }}>
-            Starta kartläggningen
-          </button>
-          <button onClick={onSkip}
-            style={{ padding: "10px 18px", borderRadius: 24, border: `1.5px solid #d4a880`, background: "transparent", color: "#8a5c3a", fontSize: 13, cursor: "pointer", fontFamily: "inherit" }}>
-            Hoppa över, chatta direkt
-          </button>
+        <div className="a-btns">
+          <button className="a-btn-primary" onClick={()=>{setQ(0);setPhase("who5");}}>Starta kartläggningen</button>
+          <button className="a-btn-secondary" onClick={onSkip}>Hoppa över, chatta direkt</button>
         </div>
       </div>
     </div>
   );
 
   if (phase === "who5") return (
-    <div style={{ padding: "20px", maxWidth: 600, margin: "0 auto" }}>
-      <div style={{ background: "white", borderRadius: 18, padding: "22px", boxShadow: "0 2px 16px rgba(0,0,0,0.08)" }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
-          <div style={{ fontSize: 12, color: "#8a7060", fontWeight: 600 }}>WHO-5 · Fråga {currentQ + 1} av {WHO5.length}</div>
-          <button onClick={() => { setCurrentQ(0); setPhase("keds_intro"); }} style={{ background: "transparent", border: "none", color: "#b09880", fontSize: 11, cursor: "pointer", fontFamily: "inherit" }}>Hoppa över del 1 →</button>
+    <div className="assessment">
+      <div className="assessment-card-white">
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:6}}>
+          <span style={{fontSize:12,color:"#8a7060",fontWeight:600}}>WHO-5 · Fråga {q+1} av {WHO5_Q.length}</span>
+          <button className="skip-btn" onClick={()=>{setQ(0);setPhase("keds_intro");}}>Hoppa över del 1 →</button>
         </div>
-        <ProgressBar current={currentQ + 1} total={WHO5.length} />
-        <div style={{ fontSize: 12, color: "#8a7060", marginBottom: 8, fontStyle: "italic" }}>Under de senaste 2 veckorna...</div>
-        <div style={{ fontSize: 15, color: NAV, fontWeight: 600, lineHeight: 1.5, marginBottom: 4 }}>{WHO5[currentQ]}</div>
-        <ScaleButtons labels={WHO5_LABELS} selected={who5Answers[currentQ]} onSelect={v => setWho5Answers({ ...who5Answers, [currentQ]: v })} />
-        <div style={{ marginTop: 16, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <button onClick={() => {
-            if (currentQ === 0) setPhase("intro");
-            else setCurrentQ(currentQ - 1);
-          }} style={{ padding: "9px 18px", borderRadius: 24, border: "1.5px solid #d4a880", background: "transparent", color: "#8a5c3a", fontSize: 13, cursor: "pointer", fontFamily: "inherit" }}>
-            ← Tillbaka
-          </button>
-          <button onClick={() => nextQ(who5Answers, setWho5Answers, WHO5, "keds_intro", "who5")}
-            disabled={who5Answers[currentQ] === undefined}
-            style={{ padding: "9px 22px", borderRadius: 24, border: "none", background: who5Answers[currentQ] !== undefined ? `linear-gradient(135deg, ${TERRA}, #d4a070)` : "#e8d5c4", color: who5Answers[currentQ] !== undefined ? "white" : "#b09880", fontSize: 13, cursor: who5Answers[currentQ] !== undefined ? "pointer" : "default", fontFamily: "inherit", fontWeight: 600 }}>
-            {currentQ < WHO5.length - 1 ? "Nästa →" : "Till del 2 →"}
+        <ProgressBar cur={q+1} tot={WHO5_Q.length} />
+        <div style={{fontSize:12,color:"#8a7060",marginBottom:6,fontStyle:"italic"}}>Under de senaste 2 veckorna...</div>
+        <div style={{fontSize:15,fontWeight:600,color:"#1c2b3a",lineHeight:1.5,marginBottom:4}}>{WHO5_Q[q]}</div>
+        <div className="scale-btns">
+          {WHO5_L.map((l,i)=>(
+            <button key={i} className={`scale-btn${who5[q]===i?" selected":""}`} onClick={()=>setWho5({...who5,[q]:i})}>{l}</button>
+          ))}
+        </div>
+        <div className="nav-row">
+          <button className="back-btn" onClick={()=>q===0?setPhase("intro"):setQ(q-1)}>← Tillbaka</button>
+          <button className={`next-btn${who5[q]!==undefined?" enabled":" disabled"}`}
+            onClick={()=>{ if(who5[q]===undefined)return; q<WHO5_Q.length-1?setQ(q+1):(setQ(0),setPhase("keds_intro")); }}>
+            {q<WHO5_Q.length-1?"Nästa →":"Till del 2 →"}
           </button>
         </div>
       </div>
@@ -305,66 +410,52 @@ function Assessment({ onComplete, onSkip }) {
   );
 
   if (phase === "keds_intro") return (
-    <div style={{ padding: "24px 20px", maxWidth: 600, margin: "0 auto" }}>
-      <div style={{ background: "white", borderRadius: 18, padding: "24px", boxShadow: "0 2px 16px rgba(0,0,0,0.08)" }}>
-        <div style={{ fontSize: 22, marginBottom: 8 }}>🧠</div>
-        <div style={{ fontSize: 16, fontWeight: 600, color: NAV, marginBottom: 12 }}>Del 2 – KEDS</div>
-        <div style={{ fontSize: 13.5, color: "#4a3a2a", lineHeight: 1.75, marginBottom: 20 }}>
-          KEDS – Karolinska Exhaustion Disorder Scale – är ett formulär framtaget av Karolinska Institutet för att fånga tidiga tecken på utmattning.
-          <br /><br />
-          Det innehåller 9 frågor om hur du har känt dig den senaste månaden. Du svarar på en skala från 0 till 6 där 0 betyder "inte alls" och 6 betyder "hela tiden".
-          <br /><br />
-          Formuläret är inte en diagnos – det är ett verktyg för att öka din självkännedom och hjälpa oss att se var du befinner dig just nu.
+    <div className="assessment">
+      <div className="assessment-card-white">
+        <div className="a-icon">🧠</div>
+        <div className="a-title">Del 2 – KEDS</div>
+        <div className="a-text">
+          KEDS – Karolinska Exhaustion Disorder Scale – är ett formulär framtaget av Karolinska Institutet för att fånga tidiga tecken på utmattning.<br/><br/>
+          Det innehåller 9 frågor om hur du känt dig den senaste månaden. Du väljer det alternativ som stämmer bäst, eller en siffra däremellan.<br/><br/>
+          Formuläret är inte en diagnos – det är ett verktyg för ökad självkännedom.
         </div>
-        <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-          <button onClick={() => setPhase("keds")}
-            style={{ padding: "10px 22px", borderRadius: 24, border: "none", background: "#8fa8bc", color: "white", fontSize: 14, fontWeight: 600, cursor: "pointer", fontFamily: "inherit" }}>
-            Starta del 2 →
-          </button>
-          <button onClick={() => { setCurrentQ(0); setPhase("lisa"); }}
-            style={{ padding: "10px 18px", borderRadius: 24, border: "1.5px solid #d4a880", background: "transparent", color: "#8a5c3a", fontSize: 13, cursor: "pointer", fontFamily: "inherit" }}>
-            Hoppa över del 2
-          </button>
+        <div className="a-btns">
+          <button className="a-btn-blue" onClick={()=>{setQ(0);setPhase("keds");}}>Starta del 2 →</button>
+          <button className="a-btn-secondary" onClick={()=>{setQ(0);setPhase("lisa");}}>Hoppa över del 2</button>
+          <button className="a-btn-secondary" onClick={()=>setPhase("who5")}>← Tillbaka</button>
         </div>
       </div>
     </div>
   );
 
   if (phase === "keds") return (
-    <div style={{ padding: "20px", maxWidth: 600, margin: "0 auto" }}>
-      <div style={{ background: "white", borderRadius: 18, padding: "22px", boxShadow: "0 2px 16px rgba(0,0,0,0.08)" }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
-          <div style={{ fontSize: 12, color: "#8a7060", fontWeight: 600 }}>KEDS · Fråga {currentQ + 1} av {KEDS.length}</div>
-          <button onClick={() => { setCurrentQ(0); setPhase("lisa"); }} style={{ background: "transparent", border: "none", color: "#b09880", fontSize: 11, cursor: "pointer", fontFamily: "inherit" }}>Hoppa över del 2 →</button>
+    <div className="assessment">
+      <div className="assessment-card-white">
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:6}}>
+          <span style={{fontSize:12,color:"#8a7060",fontWeight:600}}>KEDS · Fråga {q+1} av {KEDS_Q.length}</span>
+          <button className="skip-btn" onClick={()=>{setQ(0);setPhase("lisa");}}>Hoppa över del 2 →</button>
         </div>
-        <ProgressBar current={currentQ + 1} total={KEDS.length} color="#8fa8bc" />
-        <div style={{ fontSize: 14.5, color: NAV, fontWeight: 600, lineHeight: 1.5, marginBottom: 4 }}>{KEDS[currentQ].title}</div>
-        <div style={{ fontSize: 12.5, color: "#8a7060", marginBottom: 12, fontStyle: "italic" }}>{KEDS[currentQ].desc}</div>
-        <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-          {[0,1,2,3,4,5,6].map(v => {
-            const desc = KEDS[currentQ].options[v];
-            const isSelected = kedsAnswers[currentQ] === v;
+        <ProgressBar cur={q+1} tot={KEDS_Q.length} color="#8fa8bc" />
+        <div style={{fontSize:15,fontWeight:600,color:"#1c2b3a",lineHeight:1.5,marginBottom:4}}>{KEDS_Q[q].title}</div>
+        <div style={{fontSize:12.5,color:"#8a7060",marginBottom:10,fontStyle:"italic"}}>{KEDS_Q[q].desc}</div>
+        <div className="keds-options">
+          {[0,1,2,3,4,5,6].map(v=>{
+            const desc = KEDS_Q[q].opts[v];
+            const isSel = keds[q]===v;
             return (
-              <button key={v} onClick={() => setKedsAnswers({ ...kedsAnswers, [currentQ]: v })}
-                style={{ display: "flex", alignItems: "flex-start", gap: 12, padding: "10px 14px", borderRadius: 10, border: `2px solid ${isSelected ? "#8fa8bc" : "#e8d5c4"}`, background: isSelected ? "#edf3f7" : "white", cursor: "pointer", fontFamily: "inherit", textAlign: "left", transition: "all 0.15s" }}>
-                <span style={{ minWidth: 24, height: 24, borderRadius: "50%", background: isSelected ? "#8fa8bc" : "#f0f4f7", color: isSelected ? "white" : "#8a7060", fontSize: 12, fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>{v}</span>
-                <span style={{ fontSize: 13, color: "#2a3040", lineHeight: 1.5 }}>{desc || <span style={{ color: "#c4b8a8", fontStyle: "italic" }}>– mellan dessa två –</span>}</span>
+              <button key={v} className={`keds-option${isSel?" selected":""}`} onClick={()=>setKeds({...keds,[q]:v})}>
+                <span className="keds-num">{v}</span>
+                <span className="keds-text">{desc||<em style={{color:"#c4b8a8"}}>– mellan dessa –</em>}</span>
               </button>
             );
           })}
         </div>
-        <div style={{ fontSize: 10, color: "#b09880", marginTop: 8, textAlign: "center" }}>Siffrorna 1, 3 och 5 används när du befinner dig mellan två beskrivningar</div>
-        <div style={{ marginTop: 16, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <button onClick={() => {
-            if (currentQ === 0) setPhase("keds_intro");
-            else setCurrentQ(currentQ - 1);
-          }} style={{ padding: "9px 18px", borderRadius: 24, border: "1.5px solid #d4a880", background: "transparent", color: "#8a5c3a", fontSize: 13, cursor: "pointer", fontFamily: "inherit" }}>
-            ← Tillbaka
-          </button>
-          <button onClick={() => nextQ(kedsAnswers, setKedsAnswers, KEDS, "lisa", "keds")}
-            disabled={kedsAnswers[currentQ] === undefined}
-            style={{ padding: "9px 22px", borderRadius: 24, border: "none", background: kedsAnswers[currentQ] !== undefined ? "#8fa8bc" : "#e8d5c4", color: kedsAnswers[currentQ] !== undefined ? "white" : "#b09880", fontSize: 13, cursor: kedsAnswers[currentQ] !== undefined ? "pointer" : "default", fontFamily: "inherit", fontWeight: 600 }}>
-            {currentQ < KEDS.length - 1 ? "Nästa →" : "Till del 3 →"}
+        <div className="keds-hint">Siffrorna 1, 3 och 5 används när du är mellan två beskrivningar</div>
+        <div className="nav-row">
+          <button className="back-btn" onClick={()=>q===0?setPhase("keds_intro"):setQ(q-1)}>← Tillbaka</button>
+          <button className={`next-btn${keds[q]!==undefined?" enabled-blue":" disabled"}`}
+            onClick={()=>{ if(keds[q]===undefined)return; q<KEDS_Q.length-1?setQ(q+1):(setQ(0),setPhase("lisa")); }}>
+            {q<KEDS_Q.length-1?"Nästa →":"Till del 3 →"}
           </button>
         </div>
       </div>
@@ -372,226 +463,199 @@ function Assessment({ onComplete, onSkip }) {
   );
 
   if (phase === "lisa") return (
-    <div style={{ padding: "20px", maxWidth: 600, margin: "0 auto" }}>
-      <div style={{ background: "white", borderRadius: 18, padding: "22px", boxShadow: "0 2px 16px rgba(0,0,0,0.08)" }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
-          <div style={{ fontSize: 12, color: "#8a7060", fontWeight: 600 }}>Självskattning · {currentQ + 1} av {LISA_AREAS.length}</div>
-          <button onClick={() => { const summary = buildSummary(who5Answers, kedsAnswers, {}); onComplete(summary); }} style={{ background: "transparent", border: "none", color: "#b09880", fontSize: 11, cursor: "pointer", fontFamily: "inherit" }}>Hoppa över del 3 →</button>
+    <div className="assessment">
+      <div className="assessment-card-white">
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:6}}>
+          <span style={{fontSize:12,color:"#8a7060",fontWeight:600}}>Självskattning · {q+1} av {LISA_A.length}</span>
+          <button className="skip-btn" onClick={()=>onComplete(buildSummary(who5,keds,{}))}>Hoppa över del 3 →</button>
         </div>
-        <ProgressBar current={currentQ + 1} total={LISA_AREAS.length} color={TERRA} />
-        <div style={{ fontSize: 12, color: "#8a7060", marginBottom: 6, fontStyle: "italic" }}>1 = inte alls som jag vill ha det · 10 = precis som jag vill ha det</div>
-        <div style={{ fontSize: 15, color: NAV, fontWeight: 600, lineHeight: 1.5, marginBottom: 4 }}>{LISA_AREAS[currentQ]}</div>
-        <LisaButtons selected={lisaAnswers[currentQ]} onSelect={v => setLisaAnswers({ ...lisaAnswers, [currentQ]: v })} />
-        <div style={{ marginTop: 16, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <button onClick={() => {
-            if (currentQ === 0) setPhase("keds");
-            else setCurrentQ(currentQ - 1);
-          }} style={{ padding: "9px 18px", borderRadius: 24, border: "1.5px solid #d4a880", background: "transparent", color: "#8a5c3a", fontSize: 13, cursor: "pointer", fontFamily: "inherit" }}>
-            ← Tillbaka
-          </button>
-          <button
-            onClick={() => {
-              if (lisaAnswers[currentQ] === undefined) return;
-              if (currentQ < LISA_AREAS.length - 1) {
-                setCurrentQ(currentQ + 1);
-              } else {
-                const summary = buildSummary(who5Answers, kedsAnswers, lisaAnswers);
-                onComplete(summary);
-              }
-            }}
-            disabled={lisaAnswers[currentQ] === undefined}
-            style={{ padding: "9px 22px", borderRadius: 24, border: "none", background: lisaAnswers[currentQ] !== undefined ? `linear-gradient(135deg, ${TERRA}, #d4a070)` : "#e8d5c4", color: lisaAnswers[currentQ] !== undefined ? "white" : "#b09880", fontSize: 13, cursor: lisaAnswers[currentQ] !== undefined ? "pointer" : "default", fontFamily: "inherit", fontWeight: 600 }}>
-            {currentQ < LISA_AREAS.length - 1 ? "Nästa →" : "Visa resultat →"}
+        <ProgressBar cur={q+1} tot={LISA_A.length} />
+        <div style={{fontSize:12,color:"#8a7060",marginBottom:6,fontStyle:"italic"}}>1 = inte alls som jag vill ha det · 10 = precis som jag vill ha det</div>
+        <div style={{fontSize:15,fontWeight:600,color:"#1c2b3a",lineHeight:1.5,marginBottom:4}}>{LISA_A[q]}</div>
+        <div className="lisa-btns">
+          {[1,2,3,4,5,6,7,8,9,10].map(i=>(
+            <button key={i} className={`lisa-btn${lisa[q]===i?" selected":""}`} onClick={()=>setLisa({...lisa,[q]:i})}>{i}</button>
+          ))}
+        </div>
+        <div className="nav-row">
+          <button className="back-btn" onClick={()=>q===0?setPhase("keds"):setQ(q-1)}>← Tillbaka</button>
+          <button className={`next-btn${lisa[q]!==undefined?" enabled":" disabled"}`}
+            onClick={()=>{ if(lisa[q]===undefined)return; if(q<LISA_A.length-1){setQ(q+1);}else{onComplete(buildSummary(who5,keds,lisa));} }}>
+            {q<LISA_A.length-1?"Nästa →":"Visa resultat →"}
           </button>
         </div>
       </div>
     </div>
   );
-
   return null;
 }
 
-function buildSummary(who5, keds, lisa) {
-  const who5Score = Object.values(who5).reduce((a, b) => a + b, 0);
-  const kedsScore = Object.values(keds).reduce((a, b) => a + b, 0);
-  const who5Labels = ["Aldrig", "Ibland", "Lite mindre än hälften", "Lite mer än hälften", "För det mesta", "Hela tiden"];
-
-  let text = "Här är resultaten från min kartläggning:\n\n";
-
-  if (Object.keys(who5).length > 0) {
-    text += `WHO-5 (välmående): ${who5Score} av 25 poäng\n`;
-    WHO5.forEach((q, i) => { if (who5[i] !== undefined) text += `  ${q}: ${who5[i]} (${who5Labels[who5[i]]})\n`; });
-    text += "\n";
-  }
-
-  if (Object.keys(keds).length > 0) {
-    text += `KEDS (utmattningsrisk): ${kedsScore} av 54 poäng\n`;
-    KEDS.forEach((q, i) => { if (keds[i] !== undefined) text += `  ${q.title}: ${keds[i]}/6\n`; });
-    text += "\n";
-  }
-
-  if (Object.keys(lisa).length > 0) {
-    text += "Självskattning (1–10):\n";
-    LISA_AREAS.forEach((area, i) => { if (lisa[i] !== undefined) text += `  ${area}: ${lisa[i]}/10\n`; });
-  }
-
-  text += "\nKan du ge mig en personlig återkoppling och hjälpa mig se var jag kan börja?";
-  return text;
+// ─── Exercises Sidebar (desktop) ───
+function ExerciseSidebar() {
+  const [open, setOpen] = useState(null);
+  const [showInfo, setShowInfo] = useState(false);
+  return (
+    <div className="sidebar">
+      <div className="sidebar-header">
+        <div style={{color:"#f0e4d4",fontSize:13,fontWeight:600,marginBottom:3}}>🧘 Övningar</div>
+        <div style={{color:"#6a8a9a",fontSize:10,lineHeight:1.4}}>Utvalda från InsightTimer med deras godkännande</div>
+        <button className="drawer-info-btn" onClick={()=>setShowInfo(!showInfo)}>{showInfo?"Dölj info ▲":"Varför InsightTimer? ▼"}</button>
+        {showInfo&&<div className="drawer-info">InsightTimer är världens mest använda meditationsapp. Vi har handplockat övningar som är enkla för nybörjare, nästan alla 1–10 min och mestadels på svenska. Ingen app behövs – klicka länken, tryck mitt på bilden och fortsätt i webbläsaren. 💛</div>}
+      </div>
+      <div className="sidebar-list">
+        {Object.entries(EXERCISES).map(([theme,exs])=>(
+          <div key={theme}>
+            <button className="drawer-theme-btn" onClick={()=>setOpen(open===theme?null:theme)}>
+              <span className="drawer-theme-label">{theme}</span>
+              <span className="drawer-theme-arrow">{open===theme?"▲":"▼"}</span>
+            </button>
+            {open===theme&&<div className="drawer-exercises">
+              {exs.map((ex,i)=>(
+                <a key={i} className="exercise-link" href={ex.url} target="_blank" rel="noopener noreferrer">
+                  <div className="exercise-name">
+                    <span className="exercise-name-text">{ex.lang} {ex.name}</span>
+                    <span className="exercise-duration">{ex.dur}</span>
+                  </div>
+                  {ex.leader&&<div className="exercise-leader">{ex.leader}</div>}
+                  {ex.note&&<div className="exercise-note">{ex.note}</div>}
+                </a>
+              ))}
+            </div>}
+          </div>
+        ))}
+      </div>
+      <div className="sidebar-footer">Ingen app behövs 👆<br/>Klicka länken → tryck mitt på bilden</div>
+    </div>
+  );
 }
 
-// ─── Main Component ───
+// ─── Main App ───
 function MaiaCoach() {
-  const [view, setView] = useState("home"); // home | assessment | chat
+  const [view, setView] = useState("home");
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showDrawer, setShowDrawer] = useState(false);
   const [openTheme, setOpenTheme] = useState(null);
   const [showInfo, setShowInfo] = useState(false);
   const bottomRef = useRef(null);
   const inputRef = useRef(null);
 
-  useEffect(() => { bottomRef.current?.scrollIntoView({ behavior: "smooth" }); }, [messages, loading]);
+  useEffect(()=>{ bottomRef.current?.scrollIntoView({behavior:"smooth"}); },[messages,loading]);
 
   async function sendMessage(text) {
-    const msg = text || input.trim();
-    if (!msg || loading) return;
-    const newMessages = [...messages, { role: "user", content: msg }];
-    setMessages(newMessages);
+    const msg = (text||input).trim();
+    if (!msg||loading) return;
+    const newMsgs = [...messages,{role:"user",content:msg}];
+    setMessages(newMsgs);
     setInput("");
     setLoading(true);
     setView("chat");
     try {
-      const res = await fetch("https://api.anthropic.com/v1/messages", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          model: "claude-sonnet-4-20250514",
-          max_tokens: 1000,
-          system: SYSTEM_PROMPT,
-          messages: newMessages.map(m => ({ role: m.role, content: m.content }))
+      const res = await fetch("https://api.anthropic.com/v1/messages",{
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({
+          model:"claude-sonnet-4-20250514",
+          max_tokens:1000,
+          system:SYSTEM_PROMPT,
+          messages:newMsgs.map(m=>({role:m.role,content:m.content}))
         })
       });
       const data = await res.json();
-      const reply = data.content?.[0]?.text || "Något gick fel, försök igen.";
-      setMessages(prev => [...prev, { role: "assistant", content: reply }]);
+      const reply = data.content?.[0]?.text||"Något gick fel, försök igen.";
+      setMessages(prev=>[...prev,{role:"assistant",content:reply}]);
     } catch {
-      setMessages(prev => [...prev, { role: "assistant", content: "Något gick fel. Försök igen om en stund. 💛" }]);
+      setMessages(prev=>[...prev,{role:"assistant",content:"Något gick fel. Försök igen om en stund. 💛"}]);
     } finally {
       setLoading(false);
-      setTimeout(() => inputRef.current?.focus(), 100);
+      setTimeout(()=>inputRef.current?.focus(),100);
     }
   }
 
-  function handleKey(e) { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendMessage(); } }
+  function handleKey(e) { if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();sendMessage();} }
 
-  const learnTopics = ["Stress", "Återhämtning", "Rörelse", "Sömn", "Skärm & sociala medier", "Mentala verktyg", "Relationer", "Värderingar"];
-  const feelingTopics = ["Jag känner mig lite nere/nedstämd 🌧️", "Jag känner mig stressad 😓", "Jag sover dåligt 😴", "Jag fastnar i negativa tankar 🌀", "Jag vill ha mer energi ⚡", "Jag känner mig lite vilsen 🧭", "Jag känner mig ensam 🤍"];
+  const learnTopics = ["Stress","Återhämtning","Rörelse","Sömn","Skärm & sociala medier","Mentala verktyg","Relationer","Värderingar"];
+  const feelingTopics = ["Jag känner mig lite nere/nedstämd 🌧️","Jag känner mig stressad 😓","Jag sover dåligt 😴","Jag fastnar i negativa tankar 🌀","Jag vill ha mer energi ⚡","Jag känner mig lite vilsen 🧭","Jag känner mig ensam 🤍"];
 
   return (
-    <div style={{ fontFamily: "Georgia, serif", height: "100vh", background: "linear-gradient(135deg, #fdf6f0 0%, #f5ede3 100%)", display: "flex", flexDirection: "column", overflow: "hidden" }}>
+    <div className="app">
+      <ExerciseSidebar />
+      <div className="content" style={{display:"flex",flexDirection:"column",flex:1,overflow:"hidden"}}>
 
-      {/* Header */}
-      <div style={{ background: "#1c2b3a", padding: "13px 20px", display: "flex", alignItems: "center", gap: 12, flexShrink: 0 }}>
-        <div style={{ width: 36, height: 36, background: "linear-gradient(135deg, #c9856a, #d4a070)", borderRadius: 8, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16, fontWeight: "bold", color: "white", flexShrink: 0 }}>M</div>
-        <div>
-          <div style={{ color: "#f0e4d4", fontSize: 14, fontWeight: 600 }}>Maia – Head of Happiness AI-coach</div>
-          <div style={{ color: "#8fa8bc", fontSize: 11, fontStyle: "italic" }}>Din personliga coach för stress & välmående</div>
+        {/* Header */}
+        <div className="header">
+          <div className="header-logo">M</div>
+          <div>
+            <div className="header-title">Maia – AI-coach</div>
+            <div className="header-sub">Head of Happiness</div>
+          </div>
+          <div className="header-actions">
+            {view!=="home"&&<button className="header-btn" onClick={()=>setView("home")}>🏠 Start</button>}
+            <div className="online-dot" />
+          </div>
         </div>
-        <button onClick={() => setView("home")}
-          style={{ marginLeft: "auto", background: "transparent", border: "1.5px solid #3a5068", borderRadius: 20, padding: "5px 13px", color: "#d4c4b0", fontSize: 12, cursor: "pointer", fontFamily: "inherit" }}
-          onMouseEnter={e => { e.target.style.background = "#2a3f52"; e.target.style.color = "#f0e4d4"; }}
-          onMouseLeave={e => { e.target.style.background = "transparent"; e.target.style.color = "#d4c4b0"; }}>
-          🏠 Start
-        </button>
-        <div style={{ marginLeft: 10, width: 7, height: 7, borderRadius: "50%", background: "#6dbb8a", boxShadow: "0 0 6px #6dbb8a" }} />
-      </div>
 
-      {/* Info banner */}
-      <div style={{ background: "#f5ede3", borderBottom: "1px solid #e8d5c4", padding: "7px 20px", textAlign: "center", fontSize: 12, color: "#7a5c45", flexShrink: 0 }}>
-        Jag är en AI-coach tränad på Head of Happiness evidensbaserade program – inte en ersättning för professionell vård. 💛 Frågor?{" "}
-        <a href="mailto:lisa@headofhappiness.se" style={{ color: "#c9856a", textDecoration: "none", fontWeight: 600 }}>lisa@headofhappiness.se</a>
-      </div>
+        {/* Banner */}
+        <div className="banner">
+          AI-coach tränad på Head of Happiness evidensbaserade program – inte en ersättning för professionell vård. 💛 Frågor? <a href="mailto:lisa@headofhappiness.se">lisa@headofhappiness.se</a>
+        </div>
 
-      {/* Main layout */}
-      <div style={{ flex: 1, display: "flex", overflow: "hidden" }}>
-
-        {/* Left: content area */}
-        <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
+        {/* Content */}
+        <div className="main">
 
           {/* HOME */}
-          {view === "home" && (
-            <div style={{ flex: 1, overflowY: "auto", padding: "20px" }}>
-              <div style={{ maxWidth: 580, display: "flex", flexDirection: "column", gap: 12 }}>
+          {view==="home"&&(
+            <div className="home">
+              <div className="home-welcome">
+                <div className="home-welcome-title">Hej och varmt välkommen! 🌟</div>
+                <div className="home-welcome-text">Jag är Maia – en AI-coach tränad på Head of Happiness evidensbaserade program. Berätta hur du mår så anpassar jag mig efter vad du behöver just idag. Du kan prata med mig på svenska eller engelska. 😊</div>
+              </div>
 
-                {/* Assessment card */}
-                <div onClick={() => setView("assessment")}
-                  style={{ background: "linear-gradient(135deg, #c9856a, #d4a070)", borderRadius: 16, padding: "18px 20px", cursor: "pointer" }}>
-                  <div style={{ color: "white", fontSize: 14, fontWeight: 600, marginBottom: 5 }}>📋 Gör kartläggningen</div>
-                  <div style={{ color: "rgba(255,255,255,0.88)", fontSize: 12, lineHeight: 1.6 }}>WHO-5, KEDS och en självskattning av programmets olika områden. Tar ca 5–10 min och hjälper Maia att anpassa sig efter just dig. Du kan hoppa över när du vill.</div>
+              <div className="section-card light">
+                <div className="section-label">💬 HUR MÅR DU IDAG?</div>
+                <div className="chips">
+                  {feelingTopics.map((s,i)=>(
+                    <button key={i} className="chip light" onClick={()=>sendMessage(s)}>{s}</button>
+                  ))}
                 </div>
+              </div>
 
-                {/* Learn */}
-                <div style={{ background: "#1c2b3a", borderRadius: 16, padding: "16px 18px" }}>
-                  <div style={{ fontSize: 11, color: "#8fa8bc", marginBottom: 10, letterSpacing: "0.06em" }}>🎓 JAG VILL LÄRA MIG MER OM...</div>
-                  <div style={{ display: "flex", flexWrap: "wrap", gap: 7 }}>
-                    {learnTopics.map((s, i) => (
-                      <button key={i} onClick={() => { setMessages([{ role: "user", content: `Berätta mer om ${s.toLowerCase()}` }]); sendMessage(`Berätta mer om ${s.toLowerCase()}`); }}
-                        style={{ padding: "6px 13px", borderRadius: 20, border: "1.5px solid #3a5068", background: "transparent", color: "#d4c4b0", fontSize: 12, cursor: "pointer", fontFamily: "inherit" }}
-                        onMouseEnter={e => Object.assign(e.target.style, { background: "#2a3f52", borderColor: "#c9856a", color: "#f0e4d4" })}
-                        onMouseLeave={e => Object.assign(e.target.style, { background: "transparent", borderColor: "#3a5068", color: "#d4c4b0" })}>
-                        {s}
-                      </button>
-                    ))}
-                  </div>
+              <div className="section-card dark">
+                <div className="section-label">🎓 JAG VILL LÄRA MIG MER OM...</div>
+                <div className="chips">
+                  {learnTopics.map((s,i)=>(
+                    <button key={i} className="chip dark" onClick={()=>sendMessage(`Berätta mer om ${s.toLowerCase()}`)}>{s}</button>
+                  ))}
                 </div>
+              </div>
 
-                {/* Feeling */}
-                <div style={{ background: "#fdf6f0", border: "1.5px solid #e8d5c4", borderRadius: 16, padding: "16px 18px" }}>
-                  <div style={{ fontSize: 11, color: "#8a7060", marginBottom: 10, letterSpacing: "0.06em" }}>💬 HUR MÅR DU IDAG?</div>
-                  <div style={{ display: "flex", flexWrap: "wrap", gap: 7 }}>
-                    {feelingTopics.map((s, i) => (
-                      <button key={i} onClick={() => sendMessage(s)}
-                        style={{ padding: "6px 13px", borderRadius: 20, border: "1.5px solid #d4a880", background: "transparent", color: "#8a5c3a", fontSize: 12, cursor: "pointer", fontFamily: "inherit" }}
-                        onMouseEnter={e => Object.assign(e.target.style, { background: "#f5ede3", borderColor: "#c9856a" })}
-                        onMouseLeave={e => Object.assign(e.target.style, { background: "transparent", borderColor: "#d4a880" })}>
-                        {s}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
+              <div className="assessment-card" onClick={()=>setView("assessment")}>
+                <div className="assessment-card-title">📋 Gör kartläggningen</div>
+                <div className="assessment-card-text">WHO-5, KEDS och en självskattning av programmets olika områden. Tar ca 5–10 min och hjälper Maia att anpassa sig efter just dig. Du kan hoppa över när du vill.</div>
               </div>
             </div>
           )}
 
           {/* ASSESSMENT */}
-          {view === "assessment" && (
-            <div style={{ flex: 1, overflowY: "auto" }}>
-              <Assessment
-                onComplete={summary => { sendMessage(summary); }}
-                onSkip={() => setView("chat")}
-              />
-            </div>
+          {view==="assessment"&&(
+            <Assessment onComplete={s=>sendMessage(s)} onSkip={()=>setView("home")} />
           )}
 
           {/* CHAT */}
-          {view === "chat" && (
-            <div style={{ flex: 1, overflowY: "auto", padding: "18px 20px", display: "flex", flexDirection: "column", gap: 16 }}>
-              {messages.map((m, i) => (
-                <div key={i} style={{ display: "flex", flexDirection: m.role === "user" ? "row-reverse" : "row", gap: 10, alignItems: "flex-end" }}>
-                  {m.role === "assistant" && (
-                    <div style={{ width: 30, height: 30, flexShrink: 0, background: "linear-gradient(135deg, #c9856a, #d4a070)", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, color: "white", fontWeight: "bold" }}>M</div>
-                  )}
-                  <div style={{ maxWidth: "80%", padding: m.role === "user" ? "10px 15px" : "13px 17px", borderRadius: m.role === "user" ? "18px 18px 4px 18px" : "18px 18px 18px 4px", background: m.role === "user" ? "linear-gradient(135deg, #1c2b3a, #2a3f52)" : "white", color: m.role === "user" ? "#f0e4d4" : "#2a3040", fontSize: 14, lineHeight: 1.65, boxShadow: m.role === "user" ? "0 2px 10px rgba(28,43,58,0.25)" : "0 2px 10px rgba(0,0,0,0.07)", whiteSpace: "pre-wrap", wordBreak: "break-word" }}>
-                    {m.content}
-                  </div>
+          {view==="chat"&&(
+            <div className="chat">
+              {messages.map((m,i)=>(
+                <div key={i} className={`msg-row${m.role==="user"?" user":""}`}>
+                  {m.role==="assistant"&&<div className="msg-avatar">M</div>}
+                  <div className={`msg-bubble${m.role==="user"?" user":" ai"}`}>{m.content}</div>
                 </div>
               ))}
-              {loading && (
-                <div style={{ display: "flex", gap: 10, alignItems: "flex-end" }}>
-                  <div style={{ width: 30, height: 30, flexShrink: 0, background: "linear-gradient(135deg, #c9856a, #d4a070)", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, color: "white", fontWeight: "bold" }}>M</div>
-                  <div style={{ padding: "13px 17px", borderRadius: "18px 18px 18px 4px", background: "white", boxShadow: "0 2px 10px rgba(0,0,0,0.07)", display: "flex", gap: 5 }}>
-                    {[0,1,2].map(i => <div key={i} style={{ width: 6, height: 6, borderRadius: "50%", background: "#c9856a", animation: `bounce 1.2s ease-in-out ${i*0.2}s infinite` }} />)}
+              {loading&&(
+                <div className="msg-row">
+                  <div className="msg-avatar">M</div>
+                  <div className="typing">
+                    {[0,1,2].map(i=><div key={i} className="typing-dot" style={{animationDelay:`${i*0.2}s`}} />)}
                   </div>
                 </div>
               )}
@@ -599,85 +663,79 @@ function MaiaCoach() {
             </div>
           )}
 
-          {/* Input – only in chat */}
-          {view === "chat" && (
-            <div style={{ padding: "10px 20px 16px", flexShrink: 0 }}>
-              <div style={{ display: "flex", gap: 10, background: "white", borderRadius: 24, padding: "5px 5px 5px 16px", boxShadow: "0 2px 16px rgba(0,0,0,0.09)", border: "1.5px solid #e8d5c4" }}>
-                <textarea ref={inputRef} value={input} onChange={e => setInput(e.target.value)} onKeyDown={handleKey}
+          {/* Input */}
+          {view==="chat"&&(
+            <div className="input-bar">
+              <div className="input-wrap">
+                <textarea ref={inputRef} value={input} onChange={e=>setInput(e.target.value)} onKeyDown={handleKey}
                   placeholder="Skriv hur du mår eller ställ en fråga..." disabled={loading} rows={1}
-                  style={{ flex: 1, border: "none", outline: "none", resize: "none", fontSize: 14, fontFamily: "inherit", color: "#2a3040", background: "transparent", padding: "7px 0", lineHeight: 1.5, maxHeight: 100, overflowY: "auto" }}
-                  onInput={e => { e.target.style.height = "auto"; e.target.style.height = Math.min(e.target.scrollHeight, 100) + "px"; }} />
-                <button onClick={() => sendMessage()}
-                  disabled={loading || !input.trim()}
-                  style={{ width: 40, height: 40, flexShrink: 0, borderRadius: "50%", border: "none", background: input.trim() && !loading ? "linear-gradient(135deg, #c9856a, #d4a070)" : "#e8d5c4", cursor: input.trim() && !loading ? "pointer" : "default", display: "flex", alignItems: "center", justifyContent: "center", alignSelf: "flex-end", marginBottom: 2 }}>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M22 2L11 13M22 2L15 22L11 13M11 13L2 9L22 2" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                  onInput={e=>{e.target.style.height="auto";e.target.style.height=Math.min(e.target.scrollHeight,100)+"px";}} />
+                <button className="send-btn" onClick={()=>sendMessage()} disabled={loading||!input.trim()}>
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M22 2L11 13M22 2L15 22L11 13M11 13L2 9L22 2" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
                 </button>
               </div>
-              <div style={{ textAlign: "center", marginTop: 6, fontSize: 10, color: "#b09880" }}>Enter för att skicka • Shift+Enter för ny rad</div>
             </div>
           )}
         </div>
 
-        {/* Sidebar */}
-        <div style={{ width: 250, background: "#1c2b3a", display: "flex", flexDirection: "column", overflow: "hidden", borderLeft: "1px solid #2a3f52" }}>
-          <div style={{ padding: "14px 16px 10px", borderBottom: "1px solid #2a3f52", flexShrink: 0 }}>
-            <div style={{ color: "#f0e4d4", fontSize: 12, fontWeight: 600, marginBottom: 4 }}>🧘 Övningar</div>
-            <div style={{ color: "#6a8a9a", fontSize: 10, lineHeight: 1.4 }}>Utvalda från InsightTimer med deras godkännande</div>
-            <button onClick={() => setShowInfo(!showInfo)} style={{ marginTop: 5, background: "transparent", border: "none", color: "#c9856a", fontSize: 10, cursor: "pointer", padding: 0, fontFamily: "inherit", textDecoration: "underline" }}>
-              {showInfo ? "Dölj info ▲" : "Varför InsightTimer? ▼"}
-            </button>
-            {showInfo && (
-              <div style={{ marginTop: 8, background: "#2a3f52", borderRadius: 8, padding: "10px 12px", fontSize: 10, color: "#a8c0cc", lineHeight: 1.55 }}>
-                InsightTimer är världens mest använda meditationsapp. Vi har handplockat övningar som är enkla för nybörjare, nästan alla 1–10 min långa och mestadels på svenska. Du behöver inte ladda ner appen – klicka länken, tryck mitt på bilden och fortsätt i din webbläsare. 💛
-              </div>
-            )}
-          </div>
-          <div style={{ flex: 1, overflowY: "auto" }}>
-            {Object.entries(EXERCISES).map(([theme, exercises]) => (
-              <div key={theme}>
-                <button onClick={() => setOpenTheme(openTheme === theme ? null : theme)}
-                  style={{ width: "100%", padding: "10px 16px", background: openTheme === theme ? "#2a3f52" : "transparent", border: "none", borderBottom: "1px solid #243344", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "space-between", fontFamily: "inherit" }}
-                  onMouseEnter={e => { if (openTheme !== theme) e.currentTarget.style.background = "#243344"; }}
-                  onMouseLeave={e => { if (openTheme !== theme) e.currentTarget.style.background = "transparent"; }}>
-                  <span style={{ color: "#d4c4b0", fontSize: 12, fontWeight: 600 }}>{THEME_EMOJIS[theme]} {theme}</span>
-                  <span style={{ color: "#6a8a9a", fontSize: 10 }}>{openTheme === theme ? "▲" : "▼"}</span>
-                </button>
-                {openTheme === theme && (
-                  <div style={{ background: "#243344", padding: "4px 0" }}>
-                    {exercises.map((ex, i) => (
-                      <a key={i} href={ex.url} target="_blank" rel="noopener noreferrer"
-                        style={{ display: "block", padding: "8px 16px", textDecoration: "none", borderBottom: "1px solid #1c2b3a" }}
-                        onMouseEnter={e => e.currentTarget.style.background = "#2a3f52"}
-                        onMouseLeave={e => e.currentTarget.style.background = "transparent"}>
-                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 6 }}>
-                          <span style={{ color: "#d4c4b0", fontSize: 11, lineHeight: 1.4, flex: 1 }}>{ex.lang} {ex.name}</span>
-                          <span style={{ color: "#c9856a", fontSize: 10, flexShrink: 0 }}>{ex.duration}</span>
-                        </div>
-                        {ex.leader && <div style={{ color: "#6a8a9a", fontSize: 10, marginTop: 2 }}>{ex.leader}</div>}
-                        {ex.note && <div style={{ color: "#8a7060", fontSize: 9, marginTop: 1, fontStyle: "italic" }}>{ex.note}</div>}
-                      </a>
-                    ))}
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-          <div style={{ padding: "10px 16px", borderTop: "1px solid #2a3f52", flexShrink: 0, textAlign: "center" }}>
-            <div style={{ color: "#6a8a9a", fontSize: 9, lineHeight: 1.5 }}>Ingen app behövs 👆<br />Klicka länken → tryck mitt på bilden</div>
-          </div>
+        {/* Bottom nav (mobile only) */}
+        <div className="bottom-nav">
+          <button className={`nav-btn${view==="home"?" active":""}`} onClick={()=>setView("home")}>
+            <span className="nav-btn-icon">🏠</span>Start
+          </button>
+          <button className={`nav-btn${view==="chat"?" active":""}`} onClick={()=>{ if(messages.length>0)setView("chat"); }}>
+            <span className="nav-btn-icon">💬</span>Chat
+          </button>
+          <button className={`nav-btn${view==="assessment"?" active":""}`} onClick={()=>setView("assessment")}>
+            <span className="nav-btn-icon">📋</span>Kartläggning
+          </button>
+          <button className="nav-btn" onClick={()=>setShowDrawer(true)}>
+            <span className="nav-btn-icon">🧘</span>Övningar
+          </button>
         </div>
       </div>
 
-      <style>{`
-        @keyframes bounce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-6px)}}
-        textarea::placeholder{color:#c4a88a}
-        ::-webkit-scrollbar{width:4px}
-        ::-webkit-scrollbar-thumb{background:#2a3f52;border-radius:4px}
-      `}</style>
+      {/* Exercise Drawer (mobile) */}
+      {showDrawer&&(
+        <>
+          <div className="drawer-overlay" onClick={()=>setShowDrawer(false)} />
+          <div className="drawer">
+            <div className="drawer-handle" />
+            <div className="drawer-header">
+              <div className="drawer-title">🧘 Övningar</div>
+              <div className="drawer-sub">Utvalda från InsightTimer med deras godkännande</div>
+              <button className="drawer-info-btn" onClick={()=>setShowInfo(!showInfo)}>{showInfo?"Dölj info ▲":"Varför InsightTimer? ▼"}</button>
+              {showInfo&&<div className="drawer-info">InsightTimer är världens mest använda meditationsapp. Vi har handplockat övningar som är enkla för nybörjare, nästan alla 1–10 min och mestadels på svenska. Ingen app behövs – klicka länken, tryck mitt på bilden och fortsätt i webbläsaren. 💛</div>}
+            </div>
+            <div className="drawer-list">
+              {Object.entries(EXERCISES).map(([theme,exs])=>(
+                <div key={theme}>
+                  <button className="drawer-theme-btn" onClick={()=>setOpenTheme(openTheme===theme?null:theme)}>
+                    <span className="drawer-theme-label">{theme}</span>
+                    <span className="drawer-theme-arrow">{openTheme===theme?"▲":"▼"}</span>
+                  </button>
+                  {openTheme===theme&&<div className="drawer-exercises">
+                    {exs.map((ex,i)=>(
+                      <a key={i} className="exercise-link" href={ex.url} target="_blank" rel="noopener noreferrer">
+                        <div className="exercise-name">
+                          <span className="exercise-name-text">{ex.lang} {ex.name}</span>
+                          <span className="exercise-duration">{ex.dur}</span>
+                        </div>
+                        {ex.leader&&<div className="exercise-leader">{ex.leader}</div>}
+                        {ex.note&&<div className="exercise-note">{ex.note}</div>}
+                      </a>
+                    ))}
+                  </div>}
+                </div>
+              ))}
+            </div>
+            <div className="drawer-footer">Ingen app behövs 👆 · Klicka länken → tryck mitt på bilden</div>
+          </div>
+        </>
+      )}
     </div>
   );
 }
-
 
 ReactDOM.createRoot(document.getElementById('root')).render(React.createElement(MaiaCoach));
 </script>
